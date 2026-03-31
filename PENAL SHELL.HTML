@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V-Elite Panel Store</title>
+    <style>
+        :root {
+            --primary-color: #00ff41;
+            --bg-color: #000;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            background-color: var(--bg-color); color: var(--primary-color);
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: hidden;
+            transition: color 0.5s ease;
+        }
+
+        #matrix { position: fixed; top: 0; left: 0; z-index: -1; }
+
+        .container { display: flex; flex-direction: column; align-items: center; padding: 50px 20px; }
+
+        .header {
+            text-align: center; border: 2px solid var(--primary-color); padding: 20px;
+            background: rgba(0, 0, 0, 0.8); box-shadow: 0 0 20px var(--primary-color);
+            margin-bottom: 40px; width: 100%; max-width: 800px;
+        }
+
+        .product-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px; width: 100%; max-width: 1000px;
+        }
+
+        .card {
+            background: rgba(20, 20, 20, 0.9); border: 1px solid var(--primary-color);
+            padding: 30px; text-align: center; transition: 0.3s;
+        }
+
+        .card:hover { box-shadow: 0 0 15px var(--primary-color); transform: translateY(-10px); }
+
+        .buy-btn {
+            background: var(--primary-color); color: black; border: none;
+            padding: 12px 25px; cursor: pointer; font-weight: bold;
+            font-size: 1.1rem; margin-top: 15px; width: 100%;
+        }
+
+        .modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9);
+            z-index: 100; justify-content: center; align-items: center;
+        }
+
+        .modal-content {
+            background: #111; border: 2px solid var(--primary-color);
+            padding: 30px; width: 90%; max-width: 400px;
+            text-align: center; box-shadow: 0 0 30px var(--primary-color);
+        }
+
+        input {
+            width: 80%; padding: 10px; margin: 10px 0;
+            background: #000; border: 1px solid var(--primary-color);
+            color: var(--primary-color); text-align: center; font-size: 1rem;
+        }
+
+        .status-msg { margin-top: 15px; font-weight: bold; display: none; }
+
+        /* --- DASHBOARD STYLES --- */
+        #v6Dashboard {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh; background: #050505; 
+            z-index: 200; padding: 20px; box-sizing: border-box; overflow-y: auto;
+        }
+        
+        .stats-container { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-box { border: 1px solid var(--primary-color); padding: 10px; flex: 1; min-width: 100px; background: #111; text-align: center; font-size: 0.8rem; }
+        
+        .action-center { display: flex; gap: 10px; margin-bottom: 15px; }
+        .hack-btn { 
+            background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); 
+            padding: 10px; cursor: pointer; flex: 1; font-weight: bold; font-size: 0.7rem;
+        }
+        .hack-btn:hover { background: var(--primary-color); color: #000; }
+
+        .db-table {
+            width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.8rem;
+            border: 1px solid #333; background: #0a0a0a;
+        }
+        .db-table th, .db-table td { border: 1px solid #333; padding: 8px; text-align: left; }
+        .db-table th { background: #111; color: yellow; }
+
+        .console {
+            background: #000; border: 1px solid #444; padding: 10px;
+            height: 150px; overflow-y: auto; color: var(--primary-color);
+            font-size: 0.8rem; text-align: left; margin-top: 15px;
+        }
+
+        .v12-banner {
+            background: linear-gradient(90deg, #ff0000, #550000); color: white;
+            padding: 10px; margin-top: 15px; border-radius: 5px; font-weight: bold;
+            text-align: center; border: 1px solid white; cursor: pointer;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix"></canvas>
+
+    <div class="container" id="mainStore">
+        <div class="header">
+            <h1>V-ELITE PANEL STORE</h1>
+            <p>> SYSTEM STATUS: <span style="color: #00ff41;">READY</span></p>
+            <p style="font-size: 0.8rem; color: #888;">(Hint: Master PIN is 6529)</p>
+        </div>
+
+        <div class="product-grid">
+            <div class="card" style="border-color: cyan; box-shadow: 0 0 10px cyan;">
+                <h2 style="color: cyan;">V10 ELITE</h2>
+                <h3 style="font-size: 2rem;">$76</h3>
+                <button class="buy-btn" style="background: cyan;" onclick="openModal('V10 ELITE', 76)">BUY NOW</button>
+            </div>
+            
+            <div class="card">
+                <h2>V6 PREMIUM</h2>
+                <h3 style="font-size: 2rem;">₹1499</h3>
+                <button class="buy-btn" onclick="openModal('V6 PREMIUM', 1499)">BUY NOW</button>
+            </div>
+            <div class="card">
+                <h2>CUSTOM V-SERIES</h2>
+                <h3 style="font-size: 2rem;">₹2499</h3>
+                <button class="buy-btn" onclick="openModal('CUSTOM V-SERIES', 2499)">BUY NOW</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">VERIFY ACCESS</h2>
+            <input type="number" id="userAmount" placeholder="Enter Amount (Price)">
+            <input type="password" id="userPin" placeholder="Enter Secret PIN">
+            <button class="buy-btn" onclick="verifyAccess()">LOGIN TO PANEL</button>
+            <p id="errorMsg" style="color: red;" class="status-msg">ACCESS DENIED!</p>
+            <p id="successMsg" style="color: #00ff41;" class="status-msg">DECRYPTING SYSTEM...</p>
+            <button onclick="closeModal()" style="background:none; border:none; color:grey; cursor:pointer; margin-top:20px;">Cancel</button>
+        </div>
+    </div>
+
+    <div id="v6Dashboard">
+        <div style="border-bottom: 2px solid var(--primary-color); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="dashTitle">V-TERMINAL // ADMIN: KAUSHAL</h3>
+            <button onclick="location.reload()" style="background: red; color: white; border: none; padding: 5px 10px; cursor: pointer;">EXIT</button>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-box" id="netStat">NETWORK: SECURE</div>
+            <div class="stat-box">UPTIME: 99.9%</div>
+            <div class="stat-box">PROXY: ACTIVE</div>
+        </div>
+
+        <div class="action-center">
+            <button class="hack-btn" onclick="runHack('REFRESHING DB...')">SYNC DATABASE</button>
+            <button class="hack-btn" onclick="runHack('INJECTING PROTOCOL...')">RUN EXPLOIT</button>
+        </div>
+
+        <h4 style="margin: 10px 0; color: yellow;">[ LIVE USER DATABASE ]</h4>
+        <table class="db-table">
+            <thead>
+                <tr>
+                    <th>USER ID</th>
+                    <th>IP ADDRESS</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>#US_9921</td><td>192.168.1.45</td><td style="color: lime;">Online</td></tr>
+                <tr><td>#US_4402</td><td>104.22.19.102</td><td style="color: red;">Blocked</td></tr>
+                <tr><td>#US_8810</td><td>172.56.0.21</td><td style="color: lime;">Online</td></tr>
+            </tbody>
+        </table>
+
+        <div class="console" id="consoleOutput">> Waiting for command...</div>
+
+        <div class="v12-banner" id="v12Btn" onclick="upgradeToV12()">
+            ⚡ NEW UPDATE: UPGRADE TO V12 ELITE ⚡
+        </div>
+    </div>
+
+    <script>
+        let matrixColor = "#00ff41";
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const letters = "01";
+        const drops = Array(Math.floor(canvas.width / 16)).fill(1);
+
+        function draw() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = matrixColor;
+            drops.forEach((y, i) => {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * 16, y * 16);
+                if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(draw, 50);
+
+        const MASTER_PIN = "6529"; 
+        let currentPrice = 0;
+
+        function openModal(name, price) {
+            currentPrice = price;
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('paymentModal').style.display = 'none'; }
+
+        function verifyAccess() {
+            const typedAmount = document.getElementById('userAmount').value;
+            const typedPin = document.getElementById('userPin').value;
+
+            if (typedAmount == currentPrice && typedPin == MASTER_PIN) {
+                document.getElementById('successMsg').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('paymentModal').style.display = 'none';
+                    document.getElementById('mainStore').style.display = 'none';
+                    document.getElementById('v6Dashboard').style.display = 'block';
+                }, 1000);
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+                setTimeout(() => { document.getElementById('errorMsg').style.display = 'none'; }, 2000);
+            }
+        }
+
+        function runHack(action) {
+            const out = document.getElementById('consoleOutput');
+            out.innerHTML = `<span style="color:white;">> ${action}</span>`;
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 25;
+                out.innerHTML += `<br>> Processing: ${progress}%`;
+                out.scrollTop = out.scrollHeight;
+                if(progress >= 100) {
+                    clearInterval(interval);
+                    out.innerHTML += `<br><span style="color:yellow;">> SUCCESSFUL.</span>`;
+                }
+            }, 300);
+        }
+
+        function upgradeToV12() {
+            const out = document.getElementById('consoleOutput');
+            out.innerHTML = `<span style="color:red;">> INITIATING V12 OVERRIDE...</span>`;
+            
+            setTimeout(() => {
+                matrixColor = "#ff0000";
+                document.documentElement.style.setProperty('--primary-color', '#ff0000');
+                document.getElementById('dashTitle').innerText = "V12 ULTIMATE // ADMIN: KAUSHAL";
+                document.getElementById('dashTitle').style.color = "#ff0000";
+                document.getElementById('netStat').innerText = "NETWORK: OVERCLOCKED";
+                document.getElementById('v12Btn').style.display = "none";
+                
+                out.innerHTML += `<br><span style="color:white;">> SYSTEM UPGRADED TO V12 ULTIMATE.</span>`;
+                out.innerHTML += `<br><span style="color:red;">> ALL BYPASS FILTERS DISABLED.</span>`;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
