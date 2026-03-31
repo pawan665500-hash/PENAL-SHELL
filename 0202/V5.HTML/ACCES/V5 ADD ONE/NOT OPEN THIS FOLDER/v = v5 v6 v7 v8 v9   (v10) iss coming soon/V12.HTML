@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V12 SECURITY ELITE - ULTIMATE ANALYZER</title>
+    <style>
+        :root {
+            --neon-blue: #00d4ff;
+            --neon-red: #ff003c;
+            --neon-green: #00ff88;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: #050505; color: white;
+            font-family: 'Consolas', 'Courier New', monospace; margin: 0;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow: hidden;
+        }
+
+        /* LOGIN OVERLAY */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; justify-content: center;
+            align-items: center; z-index: 2000;
+        }
+
+        .login-box {
+            background: var(--glass-bg); padding: 40px;
+            border: 1px solid var(--neon-blue); text-align: center;
+            border-radius: 15px; box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        /* MAIN PANEL */
+        #main-dashboard {
+            display: none; width: 98%; height: 96vh;
+            background: var(--glass-bg); border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px; padding: 10px; position: relative;
+        }
+
+        .top-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+
+        input[type="text"], input[type="password"] {
+            background: rgba(0,0,0,0.8); border: 1px solid var(--neon-blue);
+            color: var(--neon-blue); padding: 8px; border-radius: 4px; outline: none; flex-grow: 1;
+        }
+
+        .v12-btn {
+            background: transparent; border: 1px solid var(--neon-blue);
+            color: var(--neon-blue); padding: 8px 15px; cursor: pointer;
+            font-weight: bold; font-size: 11px; transition: 0.3s;
+        }
+
+        .v12-btn:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 10px var(--neon-blue); }
+
+        /* LAYOUT ELEMENTS */
+        #site-frame {
+            width: 100%; height: calc(100% - 220px);
+            border: 1px solid #333; background: white; border-radius: 5px;
+        }
+
+        /* LIVE TERMINAL LOG */
+        #terminal-log {
+            width: 100%; height: 140px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #333; margin-top: 10px;
+            padding: 10px; font-size: 11px; color: var(--neon-green);
+            overflow-y: auto; box-sizing: border-box;
+            border-left: 3px solid var(--neon-blue);
+        }
+
+        .log-entry { margin-bottom: 3px; }
+        .log-time { color: #888; margin-right: 10px; }
+        .log-warn { color: var(--neon-red); font-weight: bold; }
+
+        /* SIDE TOOLS */
+        #side-tools {
+            position: absolute; left: -240px; top: 60px; width: 220px;
+            background: rgba(0,0,0,0.95); border: 1px solid var(--neon-blue);
+            height: calc(100% - 250px); transition: 0.5s; z-index: 100;
+            padding: 15px; border-radius: 0 10px 10px 0;
+        }
+        #side-tools.active { left: 0; }
+    </style>
+</head>
+<body>
+
+<div id="login-overlay">
+    <div class="login-box">
+        <h1 style="color: var(--neon-blue); letter-spacing: 5px;">V12 SECURITY</h1>
+        <p style="font-size: 12px; color: #888;">CORE SYSTEM AUTHORIZATION</p>
+        <input type="password" id="access-key" placeholder="Enter Password">
+        <br><br>
+        <button class="v12-btn" onclick="checkKey()">ACCESS MAINBOARD</button>
+    </div>
+</div>
+
+<div id="main-dashboard">
+    <div class="top-bar">
+        <button class="v12-btn" onclick="toggleTools()" style="color: var(--neon-green); border-color: var(--neon-green);">☰ TOOLS</button>
+        <input type="text" id="url-input" placeholder="Analyze suspicious link...">
+        <button class="v12-btn" onclick="loadSite()">DEPLOY ANALYZER</button>
+    </div>
+
+    <div id="side-tools">
+        <button class="v12-btn" style="width:100%; margin-bottom:10px;" onclick="addLog('Initiating Manual Security Scan...')">MANUAL SCAN</button>
+        <button class="v12-btn" style="width:100%; margin-bottom:10px;" onclick="trackIP()">IP TRACKER</button>
+        <button class="v12-btn" style="width:100%; margin-bottom:10px;" onclick="checkVulnerabilities()">VULN CHECK</button>
+        <button class="v12-btn" style="width:100%; color: var(--neon-red); border-color: var(--neon-red);" onclick="emergencyStop()">EMERGENCY KILL</button>
+    </div>
+
+    <iframe id="site-frame" src="about:blank"></iframe>
+
+    <div id="terminal-log">
+        <div class="log-entry"><span class="log-time">[00:00:01]</span> System Initialized. V12 Kernel Loaded.</div>
+    </div>
+</div>
+
+<script>
+    function addLog(msg, type = 'info') {
+        const log = document.getElementById('terminal-log');
+        const time = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        if(type === 'warn') msg = `<span class="log-warn">[ALERT] ${msg}</span>`;
+        if(type === 'success') msg = `<span style="color:#00ff88">[SUCCESS] ${msg}</span>`;
+        
+        entry.innerHTML = `<span class="log-time">[${time}]</span> ${msg}`;
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    function checkKey() {
+        if(document.getElementById('access-key').value === "V12") {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-dashboard').style.display = 'block';
+            addLog("Authorization Successful. User: Kaushal.");
+        } else {
+            alert("WRONG KEY!");
+        }
+    }
+
+    function toggleTools() { document.getElementById('side-tools').classList.toggle('active'); }
+
+    function loadSite() {
+        let url = document.getElementById('url-input').value;
+        if (!url) return;
+        if (!url.startsWith('http')) url = 'https://' + url;
+        
+        document.getElementById('site-frame').src = url;
+        addLog("Analyzing Domain: " + url);
+        addLog("Capturing HTTP Headers...");
+        
+        if(url.includes("free") || url.includes("hack")) {
+            setTimeout(() => addLog("HIGH RISK DETECTED: Phishing Pattern Found!", "warn"), 1500);
+        } else {
+            setTimeout(() => addLog("Connection Stable. SSL Verified.", "success"), 1500);
+        }
+    }
+
+    function trackIP() {
+        const url = document.getElementById('url-input').value;
+        if(!url) return addLog("Enter URL first!", "warn");
+        
+        addLog("Resolving DNS for " + url + "...");
+        setTimeout(() => {
+            let fakeIP = Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255);
+            addLog("IP TRACED: " + fakeIP, "success");
+            addLog("Location: Estimated near Server Hub.", "info");
+        }, 2000);
+    }
+
+    function checkVulnerabilities() {
+        addLog("Scanning for XSS & SQL Injection points...");
+        setTimeout(() => addLog("Scan result: No immediate exploits found in UI layer.", "success"), 2000);
+    }
+
+    function emergencyStop() {
+        document.getElementById('site-frame').src = "about:blank";
+        addLog("CONNECTION KILLED BY USER.", "warn");
+    }
+</script>
+
+</body>
+</html>

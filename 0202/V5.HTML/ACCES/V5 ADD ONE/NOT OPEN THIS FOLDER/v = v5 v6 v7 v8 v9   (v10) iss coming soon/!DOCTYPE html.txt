@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAUSHAL V6 PREMIUM - BYPASS ELITE</title>
+    <style>
+        body {
+            background-color: #050505; color: #00ffcc;
+            font-family: 'Consolas', monospace; display: flex;
+            justify-content: center; align-items: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        .panel-container {
+            width: 350px; background: rgba(15, 15, 15, 0.98);
+            border: 2px solid #00ffcc; border-radius: 15px;
+            padding: 20px; box-shadow: 0 0 20px #00ffcc;
+            text-align: center; transition: 0.5s;
+        }
+
+        .aman-active-glow {
+            border: 2px solid #ff0055 !important;
+            box-shadow: 0 0 30px #ff0055, inset 0 0 15px #ff0055 !important;
+        }
+
+        h1 { font-size: 22px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px #00ffcc; }
+
+        /* LIVE TERMINAL STYLE */
+        .terminal-box {
+            background: black; border: 1px solid #333;
+            height: 100px; overflow-y: auto; text-align: left;
+            font-size: 10px; padding: 10px; margin-bottom: 15px;
+            color: #00ff00; border-left: 3px solid #ff0055;
+        }
+
+        input[type="text"] {
+            width: 90%; padding: 10px; background: #111;
+            border: 1px solid #00ffcc; color: white; border-radius: 5px;
+            margin-bottom: 15px; outline: none; font-size: 12px;
+        }
+
+        .menu-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #1a1a1a; margin: 8px 0; padding: 10px;
+            border-radius: 8px; border-left: 4px solid #00ffcc;
+        }
+
+        .btn-inject {
+            width: 100%; padding: 12px; background: #00ffcc;
+            color: black; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; text-transform: uppercase;
+        }
+
+        /* IFRAME BOX (Hidden by default) */
+        #bypass-frame-container {
+            display: none; position: fixed; top: 5%; left: 5%;
+            width: 90%; height: 90%; background: white;
+            z-index: 500; border: 5px solid #ff0055; border-radius: 10px;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="login-screen" class="panel-container">
+    <h1>V6 LOGIN</h1>
+    <input type="text" id="userKey" placeholder="Enter Access Key (V6)">
+    <button class="btn-inject" onclick="checkLogin()">AUTHORIZE</button>
+</div>
+
+<div id="main-panel" class="panel-container hidden">
+    <h1>KAUSHAL V6</h1>
+
+    <div class="terminal-box" id="terminal-log">
+        <div>[SYSTEM] V12 Bypass Kernel Ready...</div>
+    </div>
+
+    <input type="text" id="target-url" placeholder="Enter Target (google.com / poki.com)">
+    
+    <div class="menu-item">
+        <span>Google/FB Security Bypass</span>
+        <button onclick="startBypass()" style="background:none; border:1px solid #00ffcc; color:#00ffcc; cursor:pointer; font-size:10px;">START</button>
+    </div>
+
+    <div class="menu-item" style="border-left-color: #ff0055;">
+        <span style="color:#ff0055;">AMAN MODE (Stealth)</span>
+        <input type="checkbox" id="amanToggle" onchange="toggleAmanEffect()">
+    </div>
+
+    <div class="menu-item">
+        <span>Trace IP Address</span>
+        <button onclick="traceIP()" style="background:none; border:1px solid #00ffcc; color:#00ffcc; cursor:pointer; font-size:10px;">TRACE</button>
+    </div>
+
+    <button class="btn-inject" style="background:#ff0055; margin-top:10px;" onclick="location.reload()">TERMINATE</button>
+</div>
+
+<div id="bypass-frame-container">
+    <div style="background:#000; color:white; padding:5px; display:flex; justify-content:space-between;">
+        <span>V12 SECURE BYPASS ACTIVE</span>
+        <button onclick="closeBypass()" style="background:red; color:white; border:none; cursor:pointer;">CLOSE</button>
+    </div>
+    <iframe id="bypass-frame" src="" style="width:100%; height:95%; border:none;"></iframe>
+</div>
+
+<script>
+    function addLog(msg) {
+        const log = document.getElementById('terminal-log');
+        const div = document.createElement('div');
+        div.innerText = "> " + msg;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    function checkLogin() {
+        if(document.getElementById('userKey').value === "V6") {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-panel').classList.remove('hidden');
+            addLog("Auth Success: Welcome Kaushal.");
+        } else {
+            alert("WRONG KEY!");
+        }
+    }
+
+    function startBypass() {
+        let url = document.getElementById('target-url').value;
+        if(!url) return alert("Target URL Required!");
+        if(!url.startsWith('http')) url = 'https://' + url;
+
+        addLog("Initiating SSL Bypass on " + url + "...");
+        setTimeout(() => addLog("Injecting V12 Proxy Scripts..."), 1000);
+        setTimeout(() => addLog("Bypassing X-Frame-Options..."), 2000);
+        setTimeout(() => {
+            addLog("SUCCESS: Opening Secure Link.", "info");
+            document.getElementById('bypass-frame').src = url;
+            document.getElementById('bypass-frame-container').style.display = 'block';
+        }, 3000);
+    }
+
+    function traceIP() {
+        addLog("Searching for Packet Trace...");
+        setTimeout(() => {
+            let fakeIP = `${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.1.104`;
+            addLog("IP TRACED: " + fakeIP);
+        }, 1500);
+    }
+
+    function toggleAmanEffect() {
+        const panel = document.getElementById('main-panel');
+        panel.classList.toggle('aman-active-glow');
+        addLog(panel.classList.contains('aman-active-glow') ? "AMAN STEALTH ACTIVE" : "AMAN STEALTH OFF");
+    }
+
+    function closeBypass() {
+        document.getElementById('bypass-frame-container').style.display = 'none';
+        document.getElementById('bypass-frame').src = "";
+        addLog("Session Closed Safely.");
+    }
+</script>
+
+</body>
+</html>

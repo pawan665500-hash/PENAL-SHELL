@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terminal Access</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00FF00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #terminal {
+            width: 80%;
+            height: 60%;
+            border: 1px solid #00FF00;
+            padding: 20px;
+            box-shadow: 0 0 15px #00FF00;
+            overflow-y: auto;
+            background: rgba(0, 20, 0, 0.9);
+        }
+
+        .input-line {
+            margin-top: 10px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #00FF00;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>ELITE_SYSTEM_ACCESS_V15</h2>
+    <div id="terminal">
+        <div id="output"></div>
+        <div class="input-line">
+            <span>root@kaushal:~# </span><span id="cmd"></span><span class="cursor"></span>
+        </div>
+    </div>
+
+    <script>
+        const output = document.getElementById('output');
+        const cmd = document.getElementById('cmd');
+        const lines = [
+            "Initializing handshake...",
+            "Bypassing firewall layers...",
+            "Accessing mainframe database...",
+            "Decrypting RSA-4096 keys...",
+            "STATUS: ACCESS GRANTED.",
+            "Loading user_profile: KAUSHAL...",
+            "System ready."
+        ];
+
+        let lineIdx = 0;
+
+        function typeEffect() {
+            if (lineIdx < lines.length) {
+                let p = document.createElement('p');
+                p.textContent = "> " + lines[lineIdx];
+                output.appendChild(p);
+                lineIdx++;
+                setTimeout(typeEffect, 800);
+            }
+        }
+
+        typeEffect();
+    </script>
+</body>
+</html>

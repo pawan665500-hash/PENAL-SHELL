@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAUSHAL VIP - EXTERNAL</title>
+    <style>
+        :root { --main-red: #ff003c; --neon-glow: 0 0 15px #ff003c; }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        
+        body::before { content: " "; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 2px, 3px 100%; pointer-events: none; z-index: 100; }
+
+        /* Full Screen Loading Overlay */
+        #game-loader {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #loader-img { width: 100%; max-width: 600px; border: 2px solid var(--main-red); box-shadow: var(--neon-glow); }
+
+        #login-screen { background: #0a0a0a; padding: 30px; border: 1px solid var(--main-red); border-radius: 5px; box-shadow: var(--neon-glow); text-align: center; width: 280px; z-index: 101; }
+        input { width: 90%; padding: 10px; margin: 15px 0; background: #000; border: 1px solid var(--main-red); color: #0f0; text-align: center; outline: none; }
+
+        #draggable-panel { display: none; position: absolute; background: rgba(10, 10, 10, 0.95); width: 320px; border: 1px solid var(--main-red); border-radius: 4px; box-shadow: var(--neon-glow); backdrop-filter: blur(5px); z-index: 102; }
+        .panel-header { background: var(--main-red); padding: 8px; text-align: left; font-size: 14px; font-weight: bold; cursor: move; display: flex; justify-content: space-between; }
+        .content { padding: 15px; }
+        
+        .server-box { background: rgba(0, 255, 0, 0.05); border: 1px dashed #0f0; padding: 8px; font-size: 10px; margin-bottom: 10px; color: #0f0; display: flex; justify-content: space-between; }
+        .live-dot { height: 8px; width: 8px; background-color: #0f0; border-radius: 50%; display: inline-block; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        .news-ticker { background: #111; overflow: hidden; white-space: nowrap; padding: 5px; font-size: 11px; border-top: 1px solid #333; color: #ffcc00; }
+        .news-text { display: inline-block; animation: scroll 15s linear infinite; }
+        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        .option { background: rgba(255, 0, 60, 0.05); padding: 10px; margin: 8px 0; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        input[type="checkbox"] { width: 40px; height: 20px; appearance: none; background: #333; position: relative; border-radius: 10px; cursor: pointer; }
+        input[type="checkbox"]:checked { background: var(--main-red); }
+        input[type="checkbox"]:checked::before { left: 22px; }
+        input[type="checkbox"]::before { content: ""; position: absolute; width: 16px; height: 16px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: 0.2s; }
+
+        .btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--main-red); color: var(--main-red); font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; font-family: 'Courier New', monospace; }
+        .btn:hover { background: var(--main-red); color: #fff; box-shadow: var(--neon-glow); }
+
+        #progress-bar { display: none; width: 100%; height: 4px; background: #111; margin-top: 15px; }
+        #fill { height: 100%; width: 0%; background: #0f0; box-shadow: 0 0 10px #0f0; }
+        .status { font-size: 10px; text-align: center; color: #888; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div id="game-loader">
+    <img id="loader-img" src="" alt="Loading...">
+    <h2 id="loader-text" style="color:white; margin-top:20px;">STARTING GAME...</h2>
+</div>
+
+<div id="login-screen">
+    <h3 style="color:var(--main-red); margin:0;">SYSTEM ACCESS</h3>
+    <input type="password" id="pass" placeholder="ACCESS KEY">
+    <button class="btn" onclick="checkLogin()">Initialize</button>
+</div>
+
+<div id="draggable-panel">
+    <div class="panel-header" id="header">
+        <span>KAUSHAL_VIP_MOD</span>
+        <span onclick="location.reload()" style="cursor:pointer">X</span>
+    </div>
+    <div class="content">
+        <div class="server-box">
+            <span>SERVER: GLOBAL-ASIA-01</span>
+            <span>STATUS: <span class="live-dot"></span> ONLINE</span>
+        </div>
+
+        <div class="option"><span>AIMBOT 360</span><input type="checkbox"></div>
+        <div class="option"><span>SPEED WALK</span><input type="checkbox"></div>
+        <div class="option"><span>NO RECOIL</span><input type="checkbox"></div>
+        
+        <button class="btn" id="start-btn" onclick="runInjection()">Execute Injection</button>
+
+        <div id="progress-bar"><div id="fill"></div></div>
+        
+        <div id="game-selector" style="display:none">
+            <button class="btn" style="color:#0f0; border-color:#0f0;" onclick="launch('ff')">Launch Free Fire</button>
+            <button class="btn" style="color:#00e1ff; border-color:#00e1ff;" onclick="launch('bgmi')">Launch BGMI</button>
+        </div>
+        
+        <p class="status" id="log">SYSTEM READY...</p>
+    </div>
+
+    <div class="news-ticker">
+        <span class="news-text">NEWS: V3.1 Fixed Anti-Ban | Kaushal Mod Menu is now undetected | Bypass Login Page Active...</span>
+    </div>
+</div>
+
+<script>
+    function checkLogin() {
+        if(document.getElementById("pass").value === "kaushal7") {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("draggable-panel").style.display = "block";
+        } else { alert("ACCESS DENIED"); }
+    }
+
+    function runInjection() {
+        document.getElementById("start-btn").style.display = "none";
+        document.getElementById("progress-bar").style.display = "block";
+        let fill = document.getElementById("fill");
+        let log = document.getElementById("log");
+        let w = 0;
+        let t = setInterval(() => {
+            w += 2;
+            if(w > 100) w = 100;
+            fill.style.width = w + "%";
+            log.innerText = "PATCHING MEMORY: " + w + "%";
+            if(w == 100) {
+                clearInterval(t);
+                log.innerText = "ALL MODS INJECTED!";
+                log.style.color = "#0f0";
+                document.getElementById("game-selector").style.display = "block";
+            }
+        }, 30);
+    }
+
+    function launch(game) {
+        let loader = document.getElementById("game-loader");
+        let loaderImg = document.getElementById("loader-img");
+        let package = "";
+
+        if(game === 'ff') {
+            package = "com.dts.freefireth";
+            // Yahan Free Fire ki image ka link daal dena
+            loaderImg.src = "https://i.ibb.co/v6mYf0p/images.jpg"; 
+        } else {
+            package = "com.pubg.imobile";
+            // Yahan BGMI ki GIF ka link daal dena
+            loaderImg.src = "https://i.ibb.co/C6S9k9x/bgmi.gif"; 
+        }
+
+        // Show Image/GIF first
+        loader.style.display = "flex";
+        
+        setTimeout(() => {
+            window.location.href = "intent://#Intent;package=" + package + ";end";
+            // 3 second baad loader band ho jayega
+            setTimeout(() => { loader.style.display = "none"; }, 3000);
+        }, 2000);
+    }
+
+    const p = document.getElementById("draggable-panel");
+    const h = document.getElementById("header");
+    let drag = false, x, y;
+    h.onmousedown = (e) => { drag = true; x = p.offsetLeft - e.clientX; y = p.offsetTop - e.clientY; };
+    document.onmousemove = (e) => { if(drag) { p.style.left = (e.clientX + x) + "px"; p.style.top = (e.clientY + y) + "px"; } };
+    document.onmouseup = () => drag = false;
+</script>
+
+</body>
+</html>

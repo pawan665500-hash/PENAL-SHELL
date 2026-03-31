@@ -1,0 +1,56 @@
+v<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Dispatcher</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #222; color: white; }
+        #game-container { margin: 50px auto; width: 300px; padding: 20px; border: 2px solid red; border-radius: 10px; }
+        .emergency-icon { font-size: 50px; cursor: pointer; margin: 20px; display: none; }
+        #score { font-size: 20px; margin-bottom: 10px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: red; color: white; border: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <h1>Dispatcher</h1>
+    <div id="game-container">
+        <div id="score">Calls Resolved: 0</div>
+        <p id="status">Click "Start Shift" to begin!</p>
+        <!-- Emergency icons using Unicode -->
+        <div id="fire" class="emergency-icon" onclick="resolveCall()">🔥</div>
+        <div id="police" class="emergency-icon" onclick="resolveCall()">🚓</div>
+        <button id="start-btn" onclick="startGame()">Start Shift</button>
+    </div>
+
+    <script>
+        let score = 0;
+        const icons = ['fire', 'police'];
+        
+        function startGame() {
+            score = 0;
+            document.getElementById('score').innerText = "Calls Resolved: " + score;
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('status').innerText = "Incoming Call!";
+            showRandomIcon();
+        }
+
+        function showRandomIcon() {
+            // Hide all icons first
+            icons.forEach(id => document.getElementById(id).style.display = 'none');
+            // Show a random one
+            const randomId = icons[Math.floor(Math.random() * icons.length)];
+            document.getElementById(randomId).style.display = 'inline-block';
+        }
+
+        function resolveCall() {
+            score++;
+            document.getElementById('score').innerText = "Calls Resolved: " + score;
+            document.getElementById('status').innerText = "Good job! Next call...";
+            showRandomIcon();
+        }
+    </script>
+
+</body>
+</html>

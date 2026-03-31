@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAUSHAL V6 PREMIUM</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ffcc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .panel-container {
+            width: 320px;
+            background: rgba(20, 20, 20, 0.95);
+            border: 2px solid #00ffcc;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px #00ffcc, inset 0 0 10px #00ffcc;
+            text-align: center;
+            z-index: 10;
+            transition: 0.5s;
+        }
+
+        /* Aman Special Glow Effect */
+        .aman-active-glow {
+            border: 2px solid #ff0055 !important;
+            box-shadow: 0 0 30px #ff0055, inset 0 0 15px #ff0055 !important;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        .live-stats {
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px dashed #00ffcc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 11px;
+            text-align: left;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 2px 0;
+        }
+
+        /* Aman Kill Feed Styling */
+        .aman-kill-feed {
+            background: rgba(255, 0, 85, 0.1);
+            font-size: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 10px;
+            color: #ff0055;
+            height: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 0, 85, 0.3);
+        }
+
+        .pulse {
+            height: 8px;
+            width: 8px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #ff0000;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            background: #111;
+            border: 1px solid #00ffcc;
+            color: white;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a1a1a;
+            margin: 8px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #00ffcc;
+            transition: 0.3s;
+        }
+
+        .aman-mode {
+            border-left: 4px solid #ff0055 !important;
+            background: rgba(255, 0, 85, 0.1) !important;
+        }
+
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+        .switch input { display: none; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #444; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 14px; width: 14px;
+            left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #00ffcc; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        #loading-screen {
+            position: fixed; width: 100%; height: 100%; background: #000; z-index: 100; display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+
+        .ff-bar-bg {
+            width: 70%; height: 12px; background: #333; border: 1px solid #555; border-radius: 20px; overflow: hidden; margin-top: 20px;
+        }
+
+        .ff-bar-fill {
+            width: 0%; height: 100%; background: linear-gradient(90deg, #ffcc00, #ff6600); box-shadow: 0 0 10px #ff6600;
+        }
+
+        .btn-inject {
+            width: 100%; padding: 12px; background: #00ffcc; color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="login-screen" class="panel-container">
+    <h1>V6 LOGIN</h1>
+    <input type="text" id="userKey" placeholder="Enter Access Key (V6)">
+    <button class="btn-inject" onclick="checkLogin()">LOGIN</button>
+</div>
+
+<div id="loading-screen" class="hidden">
+    <h2 style="color: #ffcc00; letter-spacing: 5px; font-style: italic;">GARENA FREE FIRE</h2>
+    <div class="ff-bar-bg">
+        <div id="progress-bar" class="ff-bar-fill"></div>
+    </div>
+    <p id="status-text" style="color: white; margin-top: 10px; font-size: 12px; font-weight: bold;">Loading Resources...</p>
+</div>
+
+<div id="main-panel" class="panel-container hidden">
+    <h1>KAUSHAL V6</h1>
+
+    <div class="live-stats">
+        <div style="font-weight: bold; margin-bottom: 5px; color: #fff;">
+            <span class="pulse"></span> LIVE SERVER STATS:
+        </div>
+        <div class="stat-row"><span>Global Rank:</span> <span style="color: #ffcc00;">#1,402 (Grandmaster)</span></div>
+        <div class="stat-row"><span>Online/PC:</span> <span id="online-p">4,281</span> / <span id="pc-p">1,179</span></div>
+        <div class="stat-row"><span>Match History:</span> <span style="color: #00ff00;">Booyah! (+45)</span></div>
+        <div class="stat-row"><span>Anti-Ban:</span> <span style="color: #00ff00;">Active</span></div>
+        
+        <div class="aman-kill-feed" id="kill-feed">Aman is waiting for match...</div>
+    </div>
+    
+    <div class="menu-item">
+        <span>Aimbot 95%</span>
+        <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+    </div>
+
+    <div class="menu-item">
+        <span>Auto Headshot</span>
+        <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+    </div>
+
+    <div class="menu-item">
+        <span>ESP Lines</span>
+        <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+    </div>
+
+    <div class="menu-item aman-mode">
+        <span style="color: #ff0055; font-weight: bold;">AMAN MODE (Bypass)</span>
+        <label class="switch">
+            <input type="checkbox" id="amanToggle" onchange="toggleAmanEffect()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="menu-item">
+        <span>Wallhack</span>
+        <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+    </div>
+
+    <button class="btn-inject" onclick="location.reload()">LOGOUT</button>
+    <div style="font-size: 10px; margin-top: 15px; color: #666;">CREATED BY KAUSHAL • V6.0.1</div>
+</div>
+
+<script>
+    function checkLogin() {
+        const key = document.getElementById('userKey').value;
+        if(key === "V6") {
+            document.getElementById('login-screen').classList.add('hidden');
+            let loader = document.getElementById('loading-screen');
+            loader.style.display = 'flex';
+            startLoading();
+        } else {
+            alert("Invalid Key! Try 'V6'");
+        }
+    }
+
+    function toggleAmanEffect() {
+        const panel = document.getElementById('main-panel');
+        const isChecked = document.getElementById('amanToggle').checked;
+        if(isChecked) {
+            panel.classList.add('aman-active-glow');
+        } else {
+            panel.classList.remove('aman-active-glow');
+        }
+    }
+
+    function startLoading() {
+        let bar = document.getElementById('progress-bar');
+        let status = document.getElementById('status-text');
+        let width = 0;
+        let interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('main-panel').classList.remove('hidden');
+                updateLiveStats();
+                startAmanKillFeed();
+            } else {
+                width++;
+                bar.style.width = width + '%';
+                if(width == 20) status.innerText = "Checking Version 1.104.X...";
+                if(width == 50) status.innerText = "Downloading Update (2.4MB)...";
+                if(width == 80) status.innerText = "Injecting AMAN & V6 Scripts...";
+            }
+        }, 50);
+    }
+
+    function startAmanKillFeed() {
+        const kills = ["Aman headshotted Noob_Player", "Aman killed Hacker_99", "Aman booyah with M1887", "Aman wiped Squad!"];
+        setInterval(() => {
+            const randomKill = kills[Math.floor(Math.random() * kills.length)];
+            document.getElementById('kill-feed').innerText = "LIVE: " + randomKill;
+        }, 4000);
+    }
+
+    function updateLiveStats() {
+        setInterval(() => {
+            let online = Math.floor(Math.random() * (5000 - 4000) + 4000);
+            let pc = Math.floor(Math.random() * (1500 - 1000) + 1000);
+            document.getElementById('online-p').innerText = online.toLocaleString();
+            document.getElementById('pc-p').innerText = pc.toLocaleString();
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>

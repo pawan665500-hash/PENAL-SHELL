@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAUSHAL V6.1 ULTRA</title>
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --secondary: #ff0055;
+            --bg: #050505;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle, #0a1a1a 0%, #050505 100%);
+        }
+
+        .panel-container {
+            width: 340px;
+            background: rgba(15, 15, 15, 0.98);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.3), inset 0 0 15px rgba(0, 255, 204, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .aman-active-glow {
+            border-color: var(--secondary) !important;
+            box-shadow: 0 0 35px rgba(255, 0, 85, 0.4), inset 0 0 15px rgba(255, 0, 85, 0.2) !important;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 15px var(--primary);
+        }
+
+        /* Server & Device Stats */
+        .live-stats {
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 11px;
+            text-align: left;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 4px 0;
+            color: #aaa;
+        }
+
+        .stat-value { color: var(--primary); font-weight: bold; }
+
+        /* Kill Feed */
+        .kill-feed {
+            background: rgba(255, 0, 85, 0.1);
+            font-size: 11px;
+            padding: 8px;
+            border-radius: 8px;
+            margin-top: 15px;
+            color: var(--secondary);
+            border-left: 3px solid var(--secondary);
+            font-style: italic;
+        }
+
+        /* Switches & Menu */
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            margin: 10px 0;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .menu-item:hover { background: rgba(0, 255, 204, 0.08); }
+
+        .switch { position: relative; width: 44px; height: 22px; }
+        .switch input { display: none; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333; transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px;
+            left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* Buttons */
+        .btn-inject {
+            width: 100%; padding: 14px; background: var(--primary); color: black; border: none; 
+            border-radius: 10px; font-weight: bold; cursor: pointer; letter-spacing: 1px;
+            transition: 0.3s; margin-top: 10px;
+        }
+
+        .btn-inject:active { transform: scale(0.98); }
+
+        .hidden { display: none !important; }
+        
+        #loading-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%; background:black;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+<div id="login-screen" class="panel-container">
+    <h1 style="color: #fff;">KAUSHAL <span style="color: var(--primary);">V6</span></h1>
+    <p style="font-size: 12px; color: #666; margin-top: -15px;">SYSTEM AUTHENTICATION</p>
+    <input type="text" id="userKey" placeholder="ACCESS KEY" style="width: 85%; padding: 12px; background: #111; border: 1px solid var(--primary); color: white; border-radius: 8px; margin: 20px 0; text-align: center;">
+    <button class="btn-inject" onclick="handleLogin()">BYPASS LOGIN</button>
+</div>
+
+<div id="loading-overlay" class="hidden">
+    <h2 id="load-title" style="color: var(--primary); letter-spacing: 3px;">INITIALIZING SCRIPTS</h2>
+    <div style="width: 250px; height: 4px; background: #222; border-radius: 10px; margin: 20px;">
+        <div id="bar-fill" style="width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 15px var(--primary); transition: 0.1s;"></div>
+    </div>
+    <p id="load-status" style="font-size: 12px; color: #888;">Connecting to Proxy...</p>
+</div>
+
+<div id="main-panel" class="panel-container hidden">
+    <h1>KAUSHAL V6</h1>
+
+    <div class="live-stats">
+        <div class="stat-row"><span>Ping:</span> <span class="stat-value" id="ping">24ms</span></div>
+        <div class="stat-row"><span>Server:</span> <span class="stat-value">IND_REGION_01</span></div>
+        <div class="stat-row"><span>Device Status:</span> <span class="stat-value" style="color: #00ff00;">SECURE</span></div>
+        <div class="stat-row"><span>Active Users:</span> <span class="stat-value" id="user-count">4,281</span></div>
+    </div>
+    
+    <div class="menu-item">
+        <span>Auto-Headshot (Silent)</span>
+        <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+    </div>
+
+    <div class="menu-item">
+        <span>ESP Skeleton</span>
+        <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+    </div>
+
+    <div class="menu-item" style="border-left: 4px solid var(--secondary);">
+        <span style="color: var(--secondary); font-weight: bold;">AMAN BYPASS V2</span>
+        <label class="switch">
+            <input type="checkbox" id="amanToggle" onchange="toggleAman()">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="kill-feed" id="feed-text">
+        System Ready. Waiting for Injection...
+    </div>
+
+    <button class="btn-inject" style="background: transparent; border: 1px solid #444; color: #888; margin-top: 20px;" onclick="location.reload()">TERMINATE SESSION</button>
+</div>
+
+<script>
+    function handleLogin() {
+        const key = document.getElementById('userKey').value.toUpperCase();
+        if(key === "V6") {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            runLoader();
+        } else {
+            alert("Invalid Key! Use 'V6'");
+        }
+    }
+
+    function runLoader() {
+        let progress = 0;
+        const bar = document.getElementById('bar-fill');
+        const status = document.getElementById('load-status');
+        const steps = ["Securing Connection...", "Bypassing Anticheat...", "Injecting AMAN.lua...", "Finalizing Assets..."];
+        
+        const interval = setInterval(() => {
+            progress += 1.5;
+            bar.style.width = progress + "%";
+            
+            if(progress > 25) status.innerText = steps[0];
+            if(progress > 50) status.innerText = steps[1];
+            if(progress > 75) status.innerText = steps[2];
+            
+            if(progress >= 100) {
+                clearInterval(interval);
+                document.getElementById('loading-overlay').classList.add('hidden');
+                document.getElementById('main-panel').classList.remove('hidden');
+                initDashboard();
+            }
+        }, 50);
+    }
+
+    function toggleAman() {
+        const panel = document.getElementById('main-panel');
+        const isAman = document.getElementById('amanToggle').checked;
+        panel.classList.toggle('aman-active-glow', isAman);
+        document.getElementById('feed-text').innerText = isAman ? "AMAN BYPASS: ACTIVATED" : "System Ready...";
+    }
+
+    function initDashboard() {
+        // Dynamic User Count
+        setInterval(() => {
+            const count = Math.floor(Math.random() * (5000 - 4500) + 4500);
+            document.getElementById('user-count').innerText = count.toLocaleString();
+            
+            const pings = [24, 28, 32, 18, 40];
+            document.getElementById('ping').innerText = pings[Math.floor(Math.random()*pings.length)] + "ms";
+        }, 3000);
+
+        // Kill Feed Logic
+        const logs = ["Aman deleted a Squad!", "Headshot registered (320m)", "Anticheat bypassed successfully", "Aman Booyah!"];
+        setInterval(() => {
+            const log = logs[Math.floor(Math.random() * logs.length)];
+            document.getElementById('feed-text').innerText = "LOG: " + log;
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abnormal Red - Kaushal VIP</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #000;
+            height: 100vh;
+            overflow: hidden;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 0, 0, 0.15) 0%, #000 30%);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Falling Stars */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-10vh); }
+            to { transform: translateY(110vh); }
+        }
+
+        /* Floating Icon */
+        #floatingIcon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 65px;
+            height: 65px;
+            background: url('images (1).jpg') no-repeat center;
+            background-size: cover;
+            border: 2px solid #ff0000;
+            border-radius: 50%;
+            display: none;
+            cursor: pointer;
+            box-shadow: 0 0 20px #ff0000;
+            z-index: 10001;
+        }
+
+        /* Main Panel */
+        .injector-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 290px;
+            background: rgba(15, 0, 0, 0.95);
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+            z-index: 9999;
+            color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .anime-header {
+            width: 100%;
+            height: 160px;
+            background: url('images (1).jpg') no-repeat center;
+            background-size: cover;
+            border-bottom: 2px solid #ff0000;
+        }
+
+        .header-title {
+            background: #ff0000;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: move;
+        }
+
+        /* Music Player */
+        .music-player {
+            background: rgba(40, 0, 0, 0.5);
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .play-btn {
+            background: none;
+            border: 1px solid #ff0000;
+            color: #ff0000;
+            padding: 2px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .section { padding: 10px 15px; border-bottom: 1px solid #300; }
+        .section-name { color: #ff4d4d; font-size: 11px; font-weight: bold; margin-bottom: 10px; display: block; }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; }
+
+        /* Anti-Ban Status */
+        .status-bar {
+            background: #1a1a1a;
+            padding: 5px;
+            text-align: center;
+            font-size: 10px;
+            color: #00ff00;
+            border-top: 1px solid #333;
+        }
+
+        /* Switches */
+        .switch {
+            width: 32px; height: 16px;
+            appearance: none;
+            background: #444;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .switch:checked { background: #ff0000; }
+        .switch::before {
+            content: '';
+            position: absolute;
+            width: 10px; height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            top: 3px; left: 3px;
+            transition: 0.3s;
+        }
+        .switch:checked::before { left: 19px; }
+
+        .btn-container { padding: 15px; }
+        .inject-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #ff0000, #800000);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+        }
+
+        .footer { text-align: center; font-size: 10px; color: #666; padding-bottom: 10px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="floatingIcon" onclick="togglePanel()"></div>
+
+    <div class="injector-panel" id="mainPanel">
+        <div class="header-title" id="dragHeader">Abnormal Red VIP</div>
+        <div class="anime-header"></div>
+        
+        <div class="status-bar">STATUS: ANTI-BAN ACTIVE (SAFE)</div>
+
+        <div class="music-player">
+            <span>VIP Background Music</span><br>
+            <button class="play-btn" onclick="toggleMusic()">PLAY/PAUSE</button>
+            <audio id="bgMusic" loop>
+                <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <div class="section">
+            <span class="section-name">Combat Settings</span>
+            <div class="row"><span>Aimbot Focus</span><input type="checkbox" class="switch"></div>
+            <div class="row"><span>Auto Headshot</span><input type="checkbox" class="switch" checked></div>
+        </div>
+
+        <div class="section">
+            <span class="section-name">Visuals (ESP)</span>
+            <div class="row"><span>ESP Line</span><input type="checkbox" class="switch"></div>
+            <div class="row"><span>Red Chams</span><input type="checkbox" class="switch"></div>
+        </div>
+
+        <div class="btn-container">
+            <button class="inject-btn" onclick="injectAndOpenGame()">INJECT & OPEN CLOUD</button>
+        </div>
+
+        <div class="footer">DEVELOPED BY KAUSHAL | PRESS 'H'</div>
+    </div>
+
+    <script>
+        // Star Rain
+        function createStars() {
+            for (let i = 0; i < 60; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                let size = Math.random() * 2 + 1 + 'px';
+                star.style.width = size; star.style.height = size;
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(star);
+            }
+        }
+        createStars();
+
+        // Dragging
+        const panel = document.getElementById("mainPanel");
+        const header = document.getElementById("dragHeader");
+        let isDragging = false, offset = [0,0];
+        header.onmousedown = (e) => { isDragging = true; offset = [panel.offsetLeft - e.clientX, panel.offsetTop - e.clientY]; };
+        document.onmousemove = (e) => {
+            document.documentElement.style.setProperty('--x', e.clientX + 'px');
+            document.documentElement.style.setProperty('--y', e.clientY + 'px');
+            if (!isDragging) return;
+            panel.style.left = (e.clientX + offset[0]) + "px";
+            panel.style.top = (e.clientY + offset[1]) + "px";
+            panel.style.transform = "none";
+        };
+        document.onmouseup = () => isDragging = false;
+
+        function togglePanel() {
+            panel.classList.toggle('hidden');
+            document.getElementById("floatingIcon").style.display = panel.classList.contains('hidden') ? 'block' : 'none';
+        }
+        window.onkeydown = (e) => { if (e.key.toLowerCase() === 'h') togglePanel(); };
+
+        function toggleMusic() {
+            const music = document.getElementById("bgMusic");
+            return music.paused ? music.play() : music.pause();
+        }
+
+        // --- UPDATED CLOUD OPEN LOGIC ---
+        function injectAndOpenGame() {
+            const btn = document.querySelector('.inject-btn');
+            btn.innerText = "INJECTING...";
+            new Audio('https://www.soundjay.com/buttons/beep-01a.mp3').play();
+
+            setTimeout(() => {
+                btn.innerText = "LAUNCHING CLOUD...";
+                
+                // Ye wahi file open karega jo aapne mujhe di hai
+                // Make sure ye file usi folder mein ho jahan aapka panel hai
+                window.location.href = "free-fire-max-cloud-online.html";
+
+                btn.innerText = "INJECTED";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
